@@ -1,4 +1,4 @@
-from bcolors import bcolors
+from .bcolors import *
 import datetime
 import time
 import pyfiglet
@@ -69,7 +69,7 @@ def active_serial_monitor(port, headerString):
     time.sleep(2)
     ser = serial.Serial(port, 115200, timeout=1)
 
-    print_like_GPT(headerString + " Listening to Pico output...\n\n",bcolors.WARNING)
+    print_like_GPT(headerString + "Ready...\n\n",bcolors.WARNING)
 
     try:
         while True:

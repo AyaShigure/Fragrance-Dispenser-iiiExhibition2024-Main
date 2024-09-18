@@ -1,5 +1,3 @@
-import datetime
-
 class bcolors:
     # Standard Colors
     HEADER = '\033[95m'
@@ -109,14 +107,7 @@ def print_256_colors():
         if (i + 1) % 16 == 0:
             print(' ')
 
-# def print_true_colors():
-#     for r in range(0, 256, 51):
-#         for g in range(0, 256, 51):
-#             for b in range(0, 256, 51):
-#                 print(bcolors.true_color(fg=(r, g, b)) + f'RGB({r},{g},{b})' + bcolors.ENDC, end=' ')
-#             print()
 
 if __name__ == "__main__":
     print_standard_colors()
     print_256_colors()
-    # print_true_colors()

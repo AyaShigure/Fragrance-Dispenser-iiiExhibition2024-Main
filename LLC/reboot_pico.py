@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from uploader_functions import *
+from uploader_functions.uploader_functions import *
 
 
 if __name__ == "__main__":

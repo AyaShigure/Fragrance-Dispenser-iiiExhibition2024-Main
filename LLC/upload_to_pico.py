@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from uploader_functions import *
+from uploader_functions.uploader_functions import *
 
 
 '''
@@ -14,6 +14,7 @@ from uploader_functions import *
 
 
 if __name__ == "__main__":
+    os.system('sudo pigpiod') # Active pi gpio
     argv = sys.argv
 
     if len(argv) == 1:
@@ -27,6 +28,9 @@ if __name__ == "__main__":
         os._exit(0)
     elif argv[1] == '-sm':
         activate_serial_monitor = True
+    else:
+        print_like_GPT('Invalid arguments\n', bcolors.color256(fg=229))
+        os._exit(0)
 
     os.system("clear")
     port = '/dev/ttyACM0'
