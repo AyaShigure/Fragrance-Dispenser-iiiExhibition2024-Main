@@ -5,13 +5,17 @@ def pin_init():
     for i in range(26):
         pin = Pin(i, Pin.OUT)
         pin.off() 
-def beep():
+def beep(count):
     buzzer = Pin(0, Pin.OUT)
-    for i in range(4):
+    for i in range(count):
         buzzer.value(1)
         time.sleep(0.1)
         buzzer.value(0)
         time.sleep(0.1)
+
+
+
+
 
 # Controller class
 class tb6600:
@@ -22,6 +26,10 @@ class tb6600:
 
         self.enable.off()  
         self.direction.off() 
+        self.delay_us_table = [1200, 1150, 1100, 1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550, 500]
+        # self.delay_us_table = [1000, 900, 800, 700, 600 , 500, 400]
+        # for i,item in enumerate(self.delay_us_table):
+        #     self.delay_us_table[i] = int(item/4)
 
     def enable_motor(self):
         self.enable.on()
@@ -38,26 +46,56 @@ class tb6600:
         self.step.off()
         time.sleep_us(delay_us)
 
+    def tick_tock(self,steps):
+        for _ in range(steps):
+            self.pulse()
+            # time.sleep(0.01)
+
+    def lock_pose(self):
+        self.step.on()
+        time.sleep(0.01)
+        self.step.off()
+        time.sleep(0.01)
+
+    def rotate(self, steps, direction):
+        division_steps = int(steps/len(self.delay_us_table))
+        self.direction.value(direction)
+        for i in range(len(self.delay_us_table)):
+            delay = self.delay_us_table[i]
+            for _ in range(division_steps):
+                self.pulse(delay_us=delay)
 
 
-    def rotate_with_ramp(self, steps, direction, min_delay_us=1000, max_delay_us=5000, ramp_steps=50):
-        self.set_direction(direction)
-        self.enable_motor()
-        # 加速阶段
-        for i in range(ramp_steps):
-            delay = max_delay_us - (max_delay_us - min_delay_us) * (i / ramp_steps)
-            self.pulse(int(delay))
+    # def pulse(self, delay_us=1000):
+    #     self.step.on()
+    #     time.sleep_us(delay_us)
+    #     self.step.off()
+    #     time.sleep_us(delay_us)
 
-        # 恒速阶段
-        for _ in range(steps - 2 * ramp_steps):
-            self.pulse(min_delay_us)
+    # def rotate_with_ramp(self, steps, direction, min_delay_us=1000, max_delay_us=5000, ramp_steps=50):
+    #     self.set_direction(direction)
+    #     self.enable_motor()
+    #     run_cycle = 50
+    #     # 加速阶段
+    #     for i in range(ramp_steps):
+    #         delay = max_delay_us - (max_delay_us - min_delay_us) * (i / ramp_steps)
+    #         self.pulse(int(delay))
 
-        # 减速阶段
-        for i in range(ramp_steps):
-            delay = min_delay_us + (max_delay_us - min_delay_us) * (i / ramp_steps)
-            self.pulse(int(delay))
+    #     # 恒速阶段
+    #     for _ in range(steps - 2 * ramp_steps):
+    #         self.pulse(min_delay_us)
 
-        self.disable_motor()
+    #     # 减速阶段
+    #     for i in range(ramp_steps):
+    #         delay = min_delay_us + (max_delay_us - min_delay_us) * (i / ramp_steps)
+    #         self.pulse(int(delay))
+
+    #     self.disable_motor()
+
+
+
+
+
 
 class LimitSwitch:
     def __init__(self, pin, active_low=True, pull_up=True, name="Limit Switch"):
