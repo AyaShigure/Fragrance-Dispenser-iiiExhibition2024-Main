@@ -1,4 +1,6 @@
 from includes.LLC_functions import *
+from includes.subsystems import *
+
 from machine import Pin, PWM, ADC
 import time
 '''
@@ -11,8 +13,8 @@ import time
 
 # About boot.py, having boot.py makes deleting files on rp2040 really slow somehow.
 time.sleep(3) # Prevent the rshell from grabbing the serial port
-pin_init()
-beep(2)
+boot()
+
 led = Pin(25, Pin.OUT)
 
 # Define motor
@@ -26,8 +28,8 @@ dir = True
 for _ in range(6):
     dir = not dir
     time.sleep(0.01)
-    motor.rotate(steps=4000, 
-                direction=dir)
+    motor.rotate_with_ramp(steps=400, direction=dir, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
+
     time.sleep(0.01)
     beep(1)
     time.sleep(0.1)

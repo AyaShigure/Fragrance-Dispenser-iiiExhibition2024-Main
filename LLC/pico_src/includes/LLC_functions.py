@@ -5,6 +5,7 @@ def pin_init():
     for i in range(26):
         pin = Pin(i, Pin.OUT)
         pin.off() 
+
 def beep(count):
     buzzer = Pin(0, Pin.OUT)
     for i in range(count):
@@ -13,6 +14,9 @@ def beep(count):
         buzzer.value(0)
         time.sleep(0.1)
 
+def boot():
+    pin_init()
+    beep(6)
 
 
 
@@ -26,10 +30,6 @@ class tb6600:
 
         self.enable.off()  
         self.direction.off() 
-        self.delay_us_table = [1200, 1150, 1100, 1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550, 500]
-        # self.delay_us_table = [1000, 900, 800, 700, 600 , 500, 400]
-        # for i,item in enumerate(self.delay_us_table):
-        #     self.delay_us_table[i] = int(item/4)
 
     def enable_motor(self):
         self.enable.on()
@@ -46,17 +46,6 @@ class tb6600:
         self.step.off()
         time.sleep_us(delay_us)
 
-    def tick_tock(self,steps):
-        for _ in range(steps):
-            self.pulse()
-            # time.sleep(0.01)
-
-    def lock_pose(self):
-        self.step.on()
-        time.sleep(0.01)
-        self.step.off()
-        time.sleep(0.01)
-
     def rotate(self, steps, direction):
         division_steps = int(steps/len(self.delay_us_table))
         self.direction.value(direction)
@@ -65,36 +54,26 @@ class tb6600:
             for _ in range(division_steps):
                 self.pulse(delay_us=delay)
 
+    def rotate_with_ramp(self, steps, direction, min_delay_us=1000, max_delay_us=5000, ramp_steps=50):
+        self.set_direction(direction)
+        self.enable_motor()
+        delay_table = []
 
-    # def pulse(self, delay_us=1000):
-    #     self.step.on()
-    #     time.sleep_us(delay_us)
-    #     self.step.off()
-    #     time.sleep_us(delay_us)
+        for i in range(ramp_steps):
+            delay = max_delay_us - (max_delay_us - min_delay_us) * (i / ramp_steps)
+            delay_table.append(int(delay))
 
-    # def rotate_with_ramp(self, steps, direction, min_delay_us=1000, max_delay_us=5000, ramp_steps=50):
-    #     self.set_direction(direction)
-    #     self.enable_motor()
-    #     run_cycle = 50
-    #     # 加速阶段
-    #     for i in range(ramp_steps):
-    #         delay = max_delay_us - (max_delay_us - min_delay_us) * (i / ramp_steps)
-    #         self.pulse(int(delay))
+        if steps > 2 * ramp_steps:
+            delay_table.extend([min_delay_us] * (steps - 2 * ramp_steps))
 
-    #     # 恒速阶段
-    #     for _ in range(steps - 2 * ramp_steps):
-    #         self.pulse(min_delay_us)
+        for i in range(ramp_steps):
+            delay = min_delay_us + (max_delay_us - min_delay_us) * (i / ramp_steps)
+            delay_table.append(int(delay))
 
-    #     # 减速阶段
-    #     for i in range(ramp_steps):
-    #         delay = min_delay_us + (max_delay_us - min_delay_us) * (i / ramp_steps)
-    #         self.pulse(int(delay))
+        for delay in delay_table:
+            self.pulse(delay)
 
-    #     self.disable_motor()
-
-
-
-
+        self.disable_motor()
 
 
 class LimitSwitch:
@@ -128,8 +107,10 @@ class LimitSwitch:
         status = "Triggered" if self.is_triggered() else "Not Triggered"
         print(f"Limit Switch '{self.name}': {status}")
 
+
+# pin 18 ,25
 class Servo:
-    def __init__(self, pin, freq=50, min_duty=1000, max_duty=9000, name="Servo Motor"):
+    def __init__(self, pin, freq=50, min_duty=1000, max_duty=9000, initial_angel=90):
         """初始化伺服电机
 
         参数:
@@ -144,10 +125,9 @@ class Servo:
         self.pwm.freq(freq)
         self.min_duty = min_duty
         self.max_duty = max_duty
-        self.name = name
         
         # 初始化位置到中间
-        self.set_angle(90)
+        self.set_angle(initial_angel)
 
     def set_angle(self, angle):
         """设置伺服电机的角度
