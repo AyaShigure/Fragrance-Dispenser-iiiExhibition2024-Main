@@ -3,6 +3,7 @@ from uploader_functions.uploader_functions import *
 
 
 if __name__ == "__main__":
+    os.system('sudo pigpiod')
     RPi4BHeaderString = PrintRPi4BHeader()
     print_like_GPT(RPi4BHeaderString + 'Rebooting the RP2040\n', bcolors.color256(fg=229))
     reboot_pico(RPi4BHeaderString)

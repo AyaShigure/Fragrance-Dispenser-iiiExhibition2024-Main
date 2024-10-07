@@ -1,6 +1,8 @@
 from machine import Pin, PWM, ADC
 import time
 
+# This function set is for direct hardware control, the most basic functions
+
 def pin_init():
     for i in range(26):
         pin = Pin(i, Pin.OUT)
@@ -17,9 +19,6 @@ def beep(count):
 def boot():
     pin_init()
     beep(6)
-
-
-
 
 # Controller class
 class tb6600:

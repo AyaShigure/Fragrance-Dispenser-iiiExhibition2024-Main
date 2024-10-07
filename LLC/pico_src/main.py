@@ -1,5 +1,5 @@
 from includes.LLC_functions import *
-from includes.subsystems import *
+from includes.Subsystems import *
 
 from machine import Pin, PWM, ADC
 import time
@@ -17,61 +17,51 @@ boot()
 
 led = Pin(25, Pin.OUT)
 
+
+''' Motor Designations
+Motor 1: 
+    enable_pin = 22
+    direction_pin = 23
+    step_pin = 24
+
+Motor 2:
+    enable_pin = 19
+    direction_pin = 20
+    step_pin = 21
+
+Motor 3:
+    enable_pin = 17
+    direction_pin = 16
+    step_pin = 15
+
+Motor 4:
+    enable_pin = 12
+    direction_pin = 11
+    step_pin = 10
+
+Motor 5:
+    enable_pin = 9
+    direction_pin = 8
+    step_pin = 7
+'''
+
 # Define motor
 enable_pin = 22
 direction_pin = 23
 step_pin = 24
-motor = tb6600(step_pin, direction_pin, enable_pin)
-motor.enable_motor()
+motor1 = tb6600(step_pin, direction_pin, enable_pin)
+motor1.enable_motor()
 
 dir = True
 for _ in range(6):
     dir = not dir
     time.sleep(0.01)
-    motor.rotate_with_ramp(steps=400, direction=dir, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
+    motor1.rotate_with_ramp(steps=400, direction=dir, min_delay_us=800, max_delay_us=2000, ramp_steps=100)
 
     time.sleep(0.01)
     beep(1)
     time.sleep(0.1)
 
-
-# for _ in range(4):
-#     dir = not dir
-#     for _ in range(10):
-#         time.sleep(0.01)
-#         motor.tick_tock(steps=40)
-#         time.sleep(0.01)
-#         beep(2)
-#     time.sleep(0.1)
-
-motor.disable_motor()
+motor1.disable_motor()
 beep(5)
-
-# counter = 0
-# while(counter < 10):
-
-#     if counter % 2 == 0:
-#         buzzer.value(1)
-#         time.sleep(0.1)
-#         buzzer.value(0)
-#         time.sleep(0.1)
-#         print('Damn')
-#         # motor.enable_motor()
-#         # motor.set_direction(1)
-#         # for _ in range(200):
-#         #     motor.pulse(delay_us=2500)
-#         motor.enable_motor()
-#         motor.rotate_with_ramp(steps=4000, direction=True, min_delay_us=1000, max_delay_us=5000, ramp_steps=1)
-#         motor.disable_motor()
-
-#     counter += 1
-
-#     led.toggle()
-#     time.sleep(1)
-
-# for i in range(5):
-#     buzzer.value(1)
-#     time.sleep(0.1)
-#     buzzer.value(0)
-#     time.sleep(0.1)
 

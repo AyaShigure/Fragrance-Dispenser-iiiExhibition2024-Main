@@ -1,12 +1,13 @@
 from includes.LLC_functions import *
 
+# This function sets defines the subsystems within the fragrance dispenser
 
 class Rotatry_Plate():
+    def __init__(self) -> None:
+        pass
 
-    pass
 
-
-class Pipette_Manipulator_Gripper():
+class Pipette_Manipulator():
     def __init__(self) -> None:
         self.pipette_gripper = Servo(25,initial_angel=140) # 140 -> Outer most pos, 140 ->
         self.pipette_pusher = Servo(18,initial_angel=80) # 80 -> Outer most pos, 80 -> 110
