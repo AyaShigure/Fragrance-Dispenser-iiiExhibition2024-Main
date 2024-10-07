@@ -15,7 +15,7 @@ def beep(count):
         time.sleep(0.1)
         buzzer.value(0)
         time.sleep(0.1)
-
+        
 def boot():
     pin_init()
     beep(6)
@@ -73,38 +73,6 @@ class tb6600:
             self.pulse(delay)
 
         self.disable_motor()
-
-
-class LimitSwitch:
-    def __init__(self, pin, active_low=True, pull_up=True, name="Limit Switch"):
-        """初始化限位开关
-
-        参数:
-        pin (int): 限位开关连接的 GPIO 引脚编号
-        active_low (bool): 是否使用低电平作为触发状态（默认 True）
-        pull_up (bool): 是否使用内部上拉电阻（默认 True）
-        name (str): 限位开关的名称
-        """
-        self.pin = Pin(pin, Pin.IN, Pin.PULL_UP if pull_up else None)
-        self.active_low = active_low  # 是否低电平触发
-        self.name = name  # 限位开关的名称
-
-    def is_triggered(self):
-        """检查限位开关是否被触发
-
-        返回:
-        bool: 如果限位开关被触发，返回 True，否则返回 False
-        """
-        # 根据电平状态和是否低电平触发来判断是否被触发
-        if self.active_low:
-            return not self.pin.value()  # 低电平为被触发状态
-        else:
-            return self.pin.value()  # 高电平为被触发状态
-
-    def print_status(self):
-        """打印限位开关的状态"""
-        status = "Triggered" if self.is_triggered() else "Not Triggered"
-        print(f"Limit Switch '{self.name}': {status}")
 
 
 # pin 18 ,25

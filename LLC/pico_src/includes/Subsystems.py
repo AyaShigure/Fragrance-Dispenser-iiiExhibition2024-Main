@@ -6,6 +6,14 @@ class Rotatry_Plate():
     def __init__(self) -> None:
         pass
 
+''' Position limit switch pin 
+Vertical top: 2
+Vertical bottom: 1
+Horizontal plate side: 3
+Horizontal frame side: 4
+
+
+'''
 
 class Pipette_Manipulator():
     def __init__(self) -> None:
@@ -22,6 +30,29 @@ class Pipette_Manipulator():
         self.horizontal_motor_side_limit_switch = None # Limit switch class
         self.horizontal_frame_side_limit_switch = None # Limit switch class
 
+    #### Vertical pos control ####
+    def vertical_go_home(self):
+        pass
+
+    def vertical_move_to_top(self):
+        pass
+
+    def vertical_move_to_bottom(self):
+        pass
+
+
+    #### Horizontal pos control ####
+    def horizontal_go_home(self):
+        pass
+
+    def horizontal_move_to_plate_side():
+        pass
+
+    def horizontal_move_to_frame_side():
+        pass
+
+
+    #### Endeffector control ####
     # Basical control functions
     def engage_gripper(self):
         self.pipette_gripper.set_angle(self.pipette_gripper_angle_limit[1])
@@ -48,6 +79,9 @@ class Pipette_Manipulator():
             time.sleep(.5)
 
             time.sleep(0.1)
+    #### Subsystem combined control
+    def pipette_manipulator_go_home(self):
+        pass
 
 class Receipt_Conveyor():
 

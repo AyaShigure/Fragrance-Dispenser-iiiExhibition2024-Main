@@ -1,6 +1,6 @@
 
 
-''' Motor Designations
+''' Motor Designations:
 Motor 1: 
     enable_pin = 22
     direction_pin = 23
