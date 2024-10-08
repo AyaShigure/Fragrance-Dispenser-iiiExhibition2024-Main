@@ -76,6 +76,8 @@ def active_serial_monitor(port, headerString):
             if ser.in_waiting > 0:
                 line = ser.readline().decode('utf-8').strip()
                 print_like_GPT(headerString + f"{line}\n",  bcolors.color256(fg=154))
+            ser.flushInput()
+            time.sleep(0.1)
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
