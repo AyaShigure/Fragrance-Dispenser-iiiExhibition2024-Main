@@ -31,26 +31,26 @@ Motor 5:
 '''
 
 
-# 初始化每个 tb6600 电机类
-motor1 = tb6600(
-    step_pin=stepper_motors_pins['Motor 1']['step_pin'],
-    direction_pin=stepper_motors_pins['Motor 1']['direction_pin'],
-    enable_pin=stepper_motors_pins['Motor 1']['enable_pin']
-)
+# # 初始化每个 tb6600 电机类
+# motor1 = tb6600(
+#     step_pin=stepper_motors_pins['Motor 1']['step_pin'],
+#     direction_pin=stepper_motors_pins['Motor 1']['direction_pin'],
+#     enable_pin=stepper_motors_pins['Motor 1']['enable_pin']
+# )
 
-motor2 = tb6600(
-    step_pin=stepper_motors_pins['Motor 2']['step_pin'],
-    direction_pin=stepper_motors_pins['Motor 2']['direction_pin'],
-    enable_pin=stepper_motors_pins['Motor 2']['enable_pin']
-)
+# motor2 = tb6600(
+#     step_pin=stepper_motors_pins['Motor 2']['step_pin'],
+#     direction_pin=stepper_motors_pins['Motor 2']['direction_pin'],
+#     enable_pin=stepper_motors_pins['Motor 2']['enable_pin']
+# )
 
-motor5 = tb6600(
-    step_pin=stepper_motors_pins['Motor 5']['step_pin'],
-    direction_pin=stepper_motors_pins['Motor 5']['direction_pin'],
-    enable_pin=stepper_motors_pins['Motor 5']['enable_pin']
-)
+# motor5 = tb6600(
+#     step_pin=stepper_motors_pins['Motor 5']['step_pin'],
+#     direction_pin=stepper_motors_pins['Motor 5']['direction_pin'],
+#     enable_pin=stepper_motors_pins['Motor 5']['enable_pin']
+# )
 
-motors = [motor1, motor2, motor3, motor4, motor5]
+# motors = [motor1, motor2, motor3, motor4, motor5]
 
 
 class Rotatry_Plate():
@@ -82,10 +82,10 @@ class Pipette_Manipulator():
             direction_pin=stepper_motors_pins['Motor 3']['direction_pin'],
             enable_pin=stepper_motors_pins['Motor 3']['enable_pin']
             ) 
+        self.vertical_pos_motor.disable_motor()
         
         self.vertical_top_limit_switch = Pin(2, Pin.IN, Pin.PULL_UP)
         self.vertical_bottom_limit_switch = Pin(1, Pin.IN, Pin.PULL_UP)
-
         ############## ############## ############## Horizontal motor and limit switches
         '''
             Motor 4 is used as horizontal position control.
@@ -95,7 +95,8 @@ class Pipette_Manipulator():
             direction_pin=stepper_motors_pins['Motor 4']['direction_pin'],
             enable_pin=stepper_motors_pins['Motor 4']['enable_pin']
             ) 
-        
+        self.horizontal_pos_motor.disable_motor()
+
         self.horizontal_plate_side_limit_switch = Pin(3, Pin.IN, Pin.PULL_UP)
         self.horizontal_frame_side_limit_switch = Pin(4, Pin.IN, Pin.PULL_UP)
 
