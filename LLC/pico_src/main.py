@@ -22,33 +22,26 @@ led = Pin(25, Pin.OUT)
 #############################################
 #############################################
 
+##### Stage 2, Control logic ######
+Pipette_Manipulator = Pipette_Manipulator()
 
-##### Stage 2, Actual code ######
-vertical_top_limit_switch = Pin(2, Pin.IN, Pin.PULL_UP)
-vertical_bottom_limit_switch = Pin(1, Pin.IN, Pin.PULL_UP)
-horizontal_plate_side_limit_switch = Pin(3, Pin.IN, Pin.PULL_UP)
-horizontal_frame_side_limit_switch = Pin(4, Pin.IN, Pin.PULL_UP)
+_ = Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=8000)
+_ = Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=8000)
 
+time.sleep(1)
+beep(2)
 
-time_counter = 1
-while(1):
-    if vertical_bottom_limit_switch.value() == 0:
-        print('vertical_bottom_limit_switch is on')
-    if vertical_top_limit_switch.value() == 0:
-        print('vertical_top_limit_switch is on')
-    if horizontal_plate_side_limit_switch.value() == 0:
-        print('horizontal_plate_side_limit_switch is on')
-    if horizontal_frame_side_limit_switch.value() == 0:
-        print('horizontal_frame_side_limit_switch is on')
+_ = Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
+_ = Pipette_Manipulator.vertical_move_to_bottom(set_delay_us=5000)
 
 
-    time.sleep(0.001)
-    time_counter += 1
-    if time_counter == 1000:
-        beep(1)
-        time_counter = 1
+Pipette_Manipulator.disable_stepper_motors()
 
 
+
+
+#############################################
+#############################################
 
 ##### Stage 3, Done ######
 beep(5)

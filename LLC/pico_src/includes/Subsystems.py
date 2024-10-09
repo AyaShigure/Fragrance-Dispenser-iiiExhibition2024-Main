@@ -78,12 +78,11 @@ class Pipette_Manipulator():
             Motor 3 is used as vertical position control.
         '''
         self.vertical_pos_motor = tb6600( 
-            step_pin=stepper_motors_pins['Motor 3']['step_pin'],
-            direction_pin=stepper_motors_pins['Motor 3']['direction_pin'],
-            enable_pin=stepper_motors_pins['Motor 3']['enable_pin']
+            step_pin=stepper_motors_pins['Motor 5']['step_pin'],
+            direction_pin=stepper_motors_pins['Motor 5']['direction_pin'],
+            enable_pin=stepper_motors_pins['Motor 5']['enable_pin']
             ) 
         self.vertical_pos_motor.disable_motor()
-        
         self.vertical_top_limit_switch = Pin(2, Pin.IN, Pin.PULL_UP)
         self.vertical_bottom_limit_switch = Pin(1, Pin.IN, Pin.PULL_UP)
         ############## ############## ############## Horizontal motor and limit switches
@@ -91,54 +90,76 @@ class Pipette_Manipulator():
             Motor 4 is used as horizontal position control.
         '''
         self.horizontal_pos_motor = tb6600(
-            step_pin=stepper_motors_pins['Motor 4']['step_pin'],
-            direction_pin=stepper_motors_pins['Motor 4']['direction_pin'],
-            enable_pin=stepper_motors_pins['Motor 4']['enable_pin']
+            step_pin=stepper_motors_pins['Motor 3']['step_pin'],
+            direction_pin=stepper_motors_pins['Motor 3']['direction_pin'],
+            enable_pin=stepper_motors_pins['Motor 3']['enable_pin']
             ) 
         self.horizontal_pos_motor.disable_motor()
-
         self.horizontal_plate_side_limit_switch = Pin(3, Pin.IN, Pin.PULL_UP)
         self.horizontal_frame_side_limit_switch = Pin(4, Pin.IN, Pin.PULL_UP)
 
+    # #### Vertical pos control ####
+    # def vertical_move_to_top(self, steps):
+    #     if self.vertical_top_limit_switch.value() == 0:
+    #         print("Upper limit reached for vertical_pos_motor")
+    #         beep(3)
+    #         return 1
+    #     self.vertical_pos_motor.enable_motor()
+    #     self.vertical_pos_motor.rotate_with_ramp(steps=steps, direction=True, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
+    #     self.vertical_pos_motor.disable_motor()
+    #     return 0
+
+    # def vertical_move_to_bottom(self, steps):
+    #     if self.vertical_bottom_limit_switch.value() == 0:
+    #         print("Lower limit reached for vertical_pos_motor")
+    #         beep(3)
+    #         return 1
+    #     self.vertical_pos_motor.enable_motor()
+    #     self.vertical_pos_motor.rotate_with_ramp(steps=steps, direction=False, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
+    #     self.vertical_pos_motor.disable_motor()
+    #     return 0
 
     #### Vertical pos control ####
-    def vertical_move_to_top(self, steps):
-        if self.vertical_top_limit_switch.value() == 0:
-            print("Upper limit reached for vertical_pos_motor")
-            beep(3)
-            return 0
+    def vertical_move_to_top(self, set_delay_us):
         self.vertical_pos_motor.enable_motor()
-        self.vertical_pos_motor.rotate_with_ramp(steps=steps, direction=True, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
+        self.vertical_pos_motor.set_direction(False)
+        while self.vertical_top_limit_switch.value() !=0:
+            self.vertical_pos_motor.pulse(delay_us=set_delay_us)
+        beep(1)
         self.vertical_pos_motor.disable_motor()
+        return 1
 
 
-    def vertical_move_to_bottom(self, steps):
-        if self.vertical_bottom_limit_switch.value() == 0:
-            print("Lower limit reached for vertical_pos_motor")
-            beep(3)
-            return 0
+    def vertical_move_to_bottom(self, set_delay_us):
         self.vertical_pos_motor.enable_motor()
-        self.vertical_pos_motor.rotate_with_ramp(steps=steps, direction=False, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
+        self.vertical_pos_motor.set_direction(True)
+        while self.vertical_bottom_limit_switch.value() !=0:
+            self.vertical_pos_motor.pulse(delay_us=set_delay_us)
+        beep(1)
         self.vertical_pos_motor.disable_motor()
+        return 1
 
     #### Horizontal pos control ####
-    def horizontal_move_to_plate_side(self, steps):
-        if self.horizontal_plate_side_limit_switch.value() == 0:
-            print("Upper limit reached for horizontal_pos_motor")
-            beep(3)
-            return 0
+    def horizontal_move_to_plate_side(self, set_delay_us):
         self.horizontal_pos_motor.enable_motor()
-        self.horizontal_pos_motor.rotate_with_ramp(steps=steps, direction=True, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
+        self.horizontal_pos_motor.set_direction(False)
+        while self.horizontal_plate_side_limit_switch.value() != 0:
+            self.horizontal_pos_motor.pulse(delay_us=set_delay_us)
+        beep(1)
         self.horizontal_pos_motor.disable_motor()
+        return 1
 
-    def horizontal_move_to_frame_side(self, steps):
-        if self.horizontal_frame_side_limit_switch.value() == 0:
-            print("bottom limit reached for horizontal_pos_motor")
-            beep(3)
-            return 0
+    def horizontal_move_to_frame_side(self, set_delay_us):
         self.horizontal_pos_motor.enable_motor()
-        self.horizontal_pos_motor.rotate_with_ramp(steps=steps, direction=False, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
-        self.horizontal_pos_motor.disable_motor()        
+        self.horizontal_pos_motor.set_direction(True)
+        while self.horizontal_frame_side_limit_switch.value() != 0:
+            self.horizontal_pos_motor.pulse(delay_us=set_delay_us)
+        beep(1)
+        self.horizontal_pos_motor.disable_motor()
+        return 1
+
+
+
 
     def disable_stepper_motors(self):
         self.vertical_pos_motor.disable_motor()
@@ -175,6 +196,8 @@ class Pipette_Manipulator():
     #### Subsystem combined control
     def pipette_manipulator_go_home(self):
         pass
+
+
 
 class Receipt_Conveyor():
 

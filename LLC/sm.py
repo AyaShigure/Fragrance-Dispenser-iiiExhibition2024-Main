@@ -7,4 +7,7 @@ if __name__ == '__main__':
     fancy_print()
     RP2040headerString = PrintRP2040Header()
 
-    active_serial_monitor(port, RP2040headerString)
+    try:
+        active_serial_monitor(port, RP2040headerString)
+    except KeyboardInterrupt:
+        print_like_GPT('KeyboardInterrupt, exiting.')

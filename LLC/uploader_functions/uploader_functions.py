@@ -79,6 +79,6 @@ def active_serial_monitor(port, headerString):
             ser.flushInput()
             time.sleep(0.1)
     except KeyboardInterrupt:
-        print("Exiting...")
+        print_like_GPT('KeyboardInterrupt, exiting.')        
     finally:
         ser.close()
