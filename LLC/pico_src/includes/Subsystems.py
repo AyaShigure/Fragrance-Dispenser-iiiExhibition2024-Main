@@ -52,18 +52,12 @@ Motor 5:
 
 # motors = [motor1, motor2, motor3, motor4, motor5]
 
-
-class Rotatry_Plate():
-    def __init__(self) -> None:
-        pass
-
-
-''' Position limit switch pin 
-Vertical top: 2
-Vertical bottom: 1
-Horizontal plate side: 3
-Horizontal frame side: 4
-
+''' 
+    Position limit switch pin:
+        Vertical top: 2
+        Vertical bottom: 1
+        Horizontal plate side: 3
+        Horizontal frame side: 4
 '''
 class Pipette_Manipulator():
     def __init__(self) -> None:
@@ -98,27 +92,6 @@ class Pipette_Manipulator():
         self.horizontal_plate_side_limit_switch = Pin(3, Pin.IN, Pin.PULL_UP)
         self.horizontal_frame_side_limit_switch = Pin(4, Pin.IN, Pin.PULL_UP)
 
-    # #### Vertical pos control ####
-    # def vertical_move_to_top(self, steps):
-    #     if self.vertical_top_limit_switch.value() == 0:
-    #         print("Upper limit reached for vertical_pos_motor")
-    #         beep(3)
-    #         return 1
-    #     self.vertical_pos_motor.enable_motor()
-    #     self.vertical_pos_motor.rotate_with_ramp(steps=steps, direction=True, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
-    #     self.vertical_pos_motor.disable_motor()
-    #     return 0
-
-    # def vertical_move_to_bottom(self, steps):
-    #     if self.vertical_bottom_limit_switch.value() == 0:
-    #         print("Lower limit reached for vertical_pos_motor")
-    #         beep(3)
-    #         return 1
-    #     self.vertical_pos_motor.enable_motor()
-    #     self.vertical_pos_motor.rotate_with_ramp(steps=steps, direction=False, min_delay_us=1000, max_delay_us=5000, ramp_steps=50)
-    #     self.vertical_pos_motor.disable_motor()
-    #     return 0
-
     #### Vertical pos control ####
     def vertical_move_to_top(self, set_delay_us):
         self.vertical_pos_motor.enable_motor()
@@ -129,7 +102,6 @@ class Pipette_Manipulator():
         self.vertical_pos_motor.disable_motor()
         return 1
 
-
     def vertical_move_to_bottom(self, set_delay_us):
         self.vertical_pos_motor.enable_motor()
         self.vertical_pos_motor.set_direction(True)
@@ -138,6 +110,35 @@ class Pipette_Manipulator():
         beep(1)
         self.vertical_pos_motor.disable_motor()
         return 1
+
+    def vertical_motor_pluse_steps(self, direction, steps, set_delay_us=5000):
+        '''
+            Move direction:
+                direction = True : move to bottom 
+                direction = False : move to top
+
+            WARNING: This function is feed fordward control,
+                     Do not use this function to move too far of distance.
+        '''
+        
+        # Check if control is doable, i.e. not gonna crash the limit sensors
+        if direction == True: # Trying to move to the bottom
+            if self.vertical_bottom_limit_switch.value() == 0: # is going to crash into the bottom switch
+                print('The endeffector is already at the bottom.')
+                return 
+        if direction == False: # Trying to move to the top
+            if self.vertical_top_limit_switch.value() == 0: # is going to crash into the top switch
+                print('The endeffector is already at the top.')
+                return 
+            
+        # Above check is checked, do the sick move.
+        self.vertical_pos_motor.enable_motor()
+        self.vertical_pos_motor.set_direction(direction)
+        for _ in range(steps):
+            self.vertical_pos_motor.pulse(delay_us=set_delay_us)
+        beep(1)
+        self.vertical_pos_motor.disable_motor()
+
 
     #### Horizontal pos control ####
     def horizontal_move_to_plate_side(self, set_delay_us):
@@ -158,13 +159,37 @@ class Pipette_Manipulator():
         self.horizontal_pos_motor.disable_motor()
         return 1
 
+    def horizontal_motor_pluse_steps(self, direction, steps, set_delay_us=6000):
+        '''
+            Move direction:
+                direction = True : move to frame side
+                direction = False : move to plate side
+
+            WARNING: This function is feed fordward control,
+                     Do not use this function to move too far of distance.
+        '''
+        # Check if control is doable, i.e. not gonna crash the limit sensors
+        if direction == True: # Trying to move to the frame side
+            if self.horizontal_frame_side_limit_switch.value() == 0: # is going to crash into the bottom switch
+                print('The endeffector is already at the bottom.')
+                return 
+        if direction == False: # Trying to move to the plate side
+            if self.horizontal_plate_side_limit_switch.value() == 0: # is going to crash into the top switch
+                print('The endeffector is already at the top.')
+                return 
+            
+        # Above check is checked, do the sick move.
+        self.vertical_pos_motor.enable_motor()
+        self.vertical_pos_motor.set_direction(direction)
+        for _ in range(steps):
+            self.vertical_pos_motor.pulse(delay_us=set_delay_us)
+        beep(1)
 
 
 
     def disable_stepper_motors(self):
         self.vertical_pos_motor.disable_motor()
         self.horizontal_pos_motor.disable_motor()
-
 
     #### Endeffector control ####
     # Basical control functions
@@ -177,8 +202,12 @@ class Pipette_Manipulator():
     def disengage_pusher(self):
         self.pipette_pusher.set_angle(self.pipette_pusher_angle_limit[0])
 
+    def deninit_endeffector(self):
+        self.pipette_gripper.deinit()
+        self.pipette_pusher.deinit()
+
     def gripper_demo(self):
-        for _ in range(4):
+        for _ in range(3):
             self.engage_pusher()
             time.sleep(.5)
             self.engage_gripper()
@@ -193,12 +222,23 @@ class Pipette_Manipulator():
             time.sleep(.5)
 
             time.sleep(0.1)
+
     #### Subsystem combined control
     def pipette_manipulator_go_home(self):
         pass
 
 
 
-class Receipt_Conveyor():
 
-    pass
+
+class Rotatry_Plate():
+    def __init__(self) -> None:
+        pass
+
+
+
+
+
+class Receipt_Conveyor():
+    def __init__(self) -> None:
+        pass
