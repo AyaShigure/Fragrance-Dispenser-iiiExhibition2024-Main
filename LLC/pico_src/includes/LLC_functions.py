@@ -20,6 +20,18 @@ def boot():
     pin_init()
     beep(6)
 
+# # Somehow this code does not work, e-stop in now configed in main.py
+# class system_self_harm_preventer:
+#     def __init__(self, estop_pin):
+#         self.estop_pin = Pin(estop_pin, Pin.IN, Pin.PULL_UP)
+#         self.estop_pin.irq(trigger=Pin.IRQ_FALLING, handler=self.handle_estop)
+#     def handle_estop(self):
+#         while(1):
+#             beep(2)
+#             print('Emergency E-Stopped. Reboot to resolve the issue.')
+#             time.sleep(2)
+
+
 # Controller class
 class tb6600:
     def __init__(self, step_pin, direction_pin, enable_pin):
@@ -73,7 +85,6 @@ class tb6600:
             self.pulse(delay)
 
         self.disable_motor()
-
 
 # pin 18 ,25
 class Servo:
@@ -161,4 +172,3 @@ class ADCReader:
         """打印当前 ADC 的状态和电压值"""
         voltage = self.read_voltage()
         print(f"ADC '{self.name}' Voltage: {voltage:.2f}V")
-
