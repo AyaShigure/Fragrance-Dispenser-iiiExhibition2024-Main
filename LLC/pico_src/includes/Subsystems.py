@@ -61,11 +61,9 @@ class Rotatry_Plate():
 
         ########## ########## ##########
 
-    def pulse_both_motors(self, direction, step, set_delay_time):
-        # self.plate_motor_A.pulse(delay = set_delay_time)
-        
-        self.plate_motor_A.enable()
-        self.plate_motor_B.enable()
+    def pulse_both_motors(self, direction, step, set_delay_time):        
+        self.plate_motor_A.enable_motor()
+        self.plate_motor_B.enable_motor()
         self.plate_motor_A.set_direction(direction)
         self.plate_motor_B.set_direction(direction)
 
@@ -82,6 +80,8 @@ class Rotatry_Plate():
 
     def laser_sensing(self):
         pass
+
+
 
 
 class Receipt_Conveyor():

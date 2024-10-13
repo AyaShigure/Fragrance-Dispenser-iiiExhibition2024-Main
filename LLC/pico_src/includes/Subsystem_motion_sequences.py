@@ -38,7 +38,18 @@ class Pipette_Manipulator_Motion_Sequences:
 
         _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
 
+###### ###### ###### ###### Rotatory Plate Motion Sequences
+class Rotatory_Plate_Motion_Sequences:
+    def __init__(self) -> None:
+        self.Rotatry_Plate = Rotatry_Plate()
+    
+    def demo_move(self):
+        self.Rotatry_Plate.pulse_both_motors(True, 1000, 20000)
 
+
+class Receipt_Conveyor_Motion_Sequences:
+    def __init__(self) -> None:
+        pass
 
 # Pipette_Manipulator = Pipette_Manipulator()
 
