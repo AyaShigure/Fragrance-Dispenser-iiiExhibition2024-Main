@@ -58,12 +58,12 @@ class Rotatry_Plate():
         pass
 
 
-''' Position limit switch pin 
-Vertical top: 2
-Vertical bottom: 1
-Horizontal plate side: 3
-Horizontal frame side: 4
-
+''' 
+    Position limit switch pin:
+        Vertical top: 2
+        Vertical bottom: 1
+        Horizontal plate side: 3
+        Horizontal frame side: 4
 '''
 class Pipette_Manipulator():
     def __init__(self) -> None:
@@ -158,9 +158,6 @@ class Pipette_Manipulator():
         self.horizontal_pos_motor.disable_motor()
         return 1
 
-
-
-
     def disable_stepper_motors(self):
         self.vertical_pos_motor.disable_motor()
         self.horizontal_pos_motor.disable_motor()
@@ -177,8 +174,12 @@ class Pipette_Manipulator():
     def disengage_pusher(self):
         self.pipette_pusher.set_angle(self.pipette_pusher_angle_limit[0])
 
+    def deninit_endeffector(self):
+        self.pipette_gripper.deinit()
+        self.pipette_pusher.deinit()
+
     def gripper_demo(self):
-        for _ in range(4):
+        for _ in range(3):
             self.engage_pusher()
             time.sleep(.5)
             self.engage_gripper()
@@ -193,9 +194,14 @@ class Pipette_Manipulator():
             time.sleep(.5)
 
             time.sleep(0.1)
+
     #### Subsystem combined control
     def pipette_manipulator_go_home(self):
         pass
+
+
+
+
 
 
 

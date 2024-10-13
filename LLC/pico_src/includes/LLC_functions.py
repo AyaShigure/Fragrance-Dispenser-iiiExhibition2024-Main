@@ -90,13 +90,11 @@ class tb6600:
 class Servo:
     def __init__(self, pin, freq=50, min_duty=1000, max_duty=9000, initial_angel=90):
         """初始化伺服电机
-
-        参数:
-        pin (int): 伺服电机控制信号连接的 GPIO 引脚编号
-        freq (int): PWM 信号频率（默认为 50Hz）
-        min_duty (int): 最小占空比（默认为 1000）
-        max_duty (int): 最大占空比（默认为 9000）
-        name (str): 伺服电机的名称
+            参数:
+            pin (int): 伺服电机控制信号连接的 GPIO 引脚编号
+            freq (int): PWM 信号频率（默认为 50Hz）
+            min_duty (int): 最小占空比（默认为 1000）
+            max_duty (int): 最大占空比（默认为 9000）
         """
         self.pin = Pin(pin)
         self.pwm = PWM(self.pin)
