@@ -20,10 +20,14 @@ import time
 '''
 time.sleep(3) # Prevent the rshell from grabbing the serial port
 boot() # Initialize all pins to 0, beep for 6 times.
-led = Pin(25, Pin.OUT)
+# led = Pin(25, Pin.OUT)
 
 
+<<<<<<< HEAD
 ###### Estop configrations ###### Some how the switch is so to extremely sensitive
+=======
+###### Estop configrations
+>>>>>>> fb203f4b0a035d922d8f1cfcfaa78d99664704af
 # estop_pin = 5
 # system_self_harm_preventer_pin = Pin(estop_pin, Pin.IN, Pin.PULL_UP) # It prevents self harming behavior
 # def handle_estop(self):
@@ -37,6 +41,28 @@ led = Pin(25, Pin.OUT)
 #############################################
 
 ##### Stage 2, Control logic ######
+<<<<<<< HEAD
+=======
+
+
+# Pipette_Manipulator = Pipette_Manipulator()
+
+# _ = Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=6000)
+# _ = Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=6000)
+# Pipette_Manipulator.gripper_demo()
+
+# time.sleep(1)
+# beep(2)
+
+# # _ = Pipette_Manipulator.vertical_move_to_bottom(set_delay_us=5000)
+# # _ = Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
+
+# Pipette_Manipulator.gripper_demo()
+
+
+# Pipette_Manipulator.disable_stepper_motors()
+
+>>>>>>> fb203f4b0a035d922d8f1cfcfaa78d99664704af
 
 
 #############################################
@@ -45,6 +71,7 @@ led = Pin(25, Pin.OUT)
 ##### Stage 3, Done ######
 beep(3)
 pin_init()
+<<<<<<< HEAD
 
 while(1):
     led.toggle()
@@ -52,3 +79,14 @@ while(1):
     led.toggle()
     time.sleep(0.5)
     beep(1)
+=======
+Pipette_Manipulator.deninit_endeffector()
+
+while(1):
+    # led.toggle()
+    # time.sleep(0.5)
+    # led.toggle()
+    # time.sleep(0.5)
+    beep(1)
+    time.sleep(1)
+>>>>>>> fb203f4b0a035d922d8f1cfcfaa78d99664704af
