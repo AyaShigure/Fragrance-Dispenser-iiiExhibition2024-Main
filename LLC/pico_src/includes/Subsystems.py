@@ -52,15 +52,6 @@ Motor 5:
 
 # motors = [motor1, motor2, motor3, motor4, motor5]
 
-<<<<<<< HEAD
-=======
-
-class Rotatry_Plate():
-    def __init__(self) -> None:
-        pass
-
-
->>>>>>> fb203f4b0a035d922d8f1cfcfaa78d99664704af
 ''' 
     Position limit switch pin:
         Vertical top: 2
@@ -168,7 +159,6 @@ class Pipette_Manipulator():
         self.horizontal_pos_motor.disable_motor()
         return 1
 
-<<<<<<< HEAD
     def horizontal_motor_pluse_steps(self, direction, steps, set_delay_us=6000):
         '''
             Move direction:
@@ -189,16 +179,14 @@ class Pipette_Manipulator():
                 return 
             
         # Above check is checked, do the sick move.
-        self.vertical_pos_motor.enable_motor()
-        self.vertical_pos_motor.set_direction(direction)
+        self.horizontal_pos_motor.enable_motor()
+        self.horizontal_pos_motor.set_direction(direction)
         for _ in range(steps):
-            self.vertical_pos_motor.pulse(delay_us=set_delay_us)
+            self.horizontal_pos_motor.pulse(delay_us=set_delay_us)
         beep(1)
 
 
 
-=======
->>>>>>> fb203f4b0a035d922d8f1cfcfaa78d99664704af
     def disable_stepper_motors(self):
         self.vertical_pos_motor.disable_motor()
         self.horizontal_pos_motor.disable_motor()
@@ -241,14 +229,6 @@ class Pipette_Manipulator():
 
 
 
-<<<<<<< HEAD
-=======
-
-
-
-
-class Receipt_Conveyor():
->>>>>>> fb203f4b0a035d922d8f1cfcfaa78d99664704af
 
 
 class Rotatry_Plate():
