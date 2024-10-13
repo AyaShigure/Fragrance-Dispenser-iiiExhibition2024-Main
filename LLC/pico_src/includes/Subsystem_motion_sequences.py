@@ -26,23 +26,33 @@ class Pipette_Manipulator_Motion_Sequences:
             self.go_home()
         self.at_home_question_mark = False
 
-        self.Pipette_Manipulator
+        self.Pipette_Manipulator.horizontal_motor_pluse_steps(direction_str='frame_side', steps=20, set_delay_us=6000)
+        _ = self.Pipette_Manipulator.vertical_move_to_bottom(set_delay_us=5000)
+        self.Pipette_Manipulator.vertical_motor_pluse_steps(direction_str='up', steps=20, set_delay_us=5000)
+
+        self.Pipette_Manipulator.engage_gripper()
+        self.Pipette_Manipulator.engage_pusher()
+        self.Pipette_Manipulator.disengage_pusher()
+        time.sleep(0.5)
+        beep(1)
+
+        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
 
 
 
-Pipette_Manipulator = Pipette_Manipulator()
+# Pipette_Manipulator = Pipette_Manipulator()
 
-# _ = Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
-# _ = Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=6000)
-_ = Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=6000)
-# Pipette_Manipulator.gripper_demo()
+# # _ = Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
+# # _ = Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=6000)
+# _ = Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=6000)
+# # Pipette_Manipulator.gripper_demo()
 
-time.sleep(1)
-beep(2)
+# time.sleep(1)
+# beep(2)
 
-_ = Pipette_Manipulator.vertical_move_to_bottom(set_delay_us=5000)
-# _ = Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
+# _ = Pipette_Manipulator.vertical_move_to_bottom(set_delay_us=5000)
+# # _ = Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
 
-# Pipette_Manipulator.gripper_demo()
+# # Pipette_Manipulator.gripper_demo()
 
-Pipette_Manipulator.disable_stepper_motors()
+# Pipette_Manipulator.disable_stepper_motors()
