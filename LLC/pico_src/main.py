@@ -41,9 +41,19 @@ system_self_harm_preventer_pin.irq(trigger=Pin.IRQ_FALLING, handler=handle_estop
 # Pipette_Manipulator_Motion_Sequences.go_home()
 # Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
 
-Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
-Rotatory_Plate_Motion_Sequences.demo_move()
+# Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
+# Rotatory_Plate_Motion_Sequences.demo_move()
 
+
+adc0 = ADCReader(26, name = 'adc0 gpio 26')
+adc1 = ADCReader(27, name = 'adc1 gpio 27')
+
+while(1):
+    adc0.print_status()
+    # time.sleep(0.5)
+    adc1.print_status()
+    # beep(1)
+    time.sleep(2)
 #############################################
 
 
