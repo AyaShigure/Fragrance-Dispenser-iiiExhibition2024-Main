@@ -61,10 +61,10 @@ Rotatry_Plate.plate_motor_A.set_direction(True)
 Rotatry_Plate.plate_motor_B.set_direction(True)
 
 now = time.time()
-while((time.time() - now )< 300):
-    position_state = Rotatry_Plate.check_laser_sensing()
-    print(f'Laser_sensing state: {position_state}')
+while((time.time() - now )< 600):
 
+    position_state = Rotatry_Plate.check_laser_sensing()
+    # print(f'Laser_sensing state: {position_state}')
     if position_state == 0: # Reached 0 position
         beep(4)
         print('Initial position is reached')
@@ -76,14 +76,15 @@ while((time.time() - now )< 300):
     if position_state == 1:
         beep(2)
         print('Reached a test tube position')
-        time.sleep(2)
-
+        time.sleep(0.5)
+        # Move out of the laser sensor window
+        for _ in range(5):
+            Rotatry_Plate.pulse_both_motors(delay_us=30000)
 
     # Go how many steps
     for _ in range(1):
-        Rotatry_Plate.pulse_both_motors(delay_us=30000)
+        Rotatry_Plate.pulse_both_motors(delay_us=40000)
 
-    time.sleep(1)
 
 
 Rotatry_Plate.plate_motor_A.disable_motor()

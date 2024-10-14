@@ -58,15 +58,28 @@ class Rotatry_Plate():
 
         ########## ########## ########## 
         # Laser positioning sensors initializations
-        self.outer_laser_sensor = ADCReader(26, name = 'Outer sensor') 
-        self.inner_laser_sensor = ADCReader(27, name = 'Inner sensor') 
+        self.inner_laser_sensor = ADCReader(26, name = 'Inner sensor') 
+        self.outer_laser_sensor = ADCReader(27, name = 'Outer sensor') 
         self.laser_sensor_threshold = 2.3 # On Off threshold
-
-        # self.outer_sensor_state = False
-        # self.inner_sensor_state = False
         ########## ########## ##########
 
-    def pulse_both_motors(self, delay_us = 10000):        
+    ##### Motor control utilities
+    def engage_motor_AB(self):
+        self.plate_motor_A.enable_motor()
+        self.plate_motor_B.enable_motor()
+    
+    def disengage_motor_AB(self):
+        self.plate_motor_A.disable_motor()
+        self.plate_motor_B.disable_motor()
+
+    def set_direction_AB(self, direction):
+        self.plate_motor_A.set_direction(direction)
+        self.plate_motor_B.set_direction(direction)
+
+    def pulse_both_motors(self, delay_us = 10000):
+        '''
+            Pulse both motor together.
+        '''
         self.plate_motor_A.step.on()
         self.plate_motor_B.step.on()
         time.sleep_us(delay_us)
@@ -75,16 +88,25 @@ class Rotatry_Plate():
         time.sleep_us(delay_us)
 
     def rotate_both_motors(self, direction, step, set_delay_time):
-        self.plate_motor_A.enable_motor()
-        self.plate_motor_B.enable_motor()
-        self.plate_motor_A.set_direction(direction)
-        self.plate_motor_B.set_direction(direction)
+        '''
+            Rotate both motor for designated step along the designated direction.
+        '''
+        self.engage_motor_AB()
+        self.set_direction_AB(direction)
         for _ in range(step):
             self.pulse_both_motors(set_delay_time)
-        self.plate_motor_A.disable_motor()
-        self.plate_motor_B.disable_motor()
+        self.disengage_motor_AB()
 
     def check_laser_sensing(self):
+        '''
+            This function will return the sensor state.
+            With all the gap between test tube holder covered by masking tape,
+            Me could determine the rotatory plate's position.
+
+            return 0: Sensor is over home position test tube.
+            return 1: Sensor is over a test tube holder.
+            return -1: Sensors are fully blocked, sensor and test tube holder is not aligned.
+        '''
         ########### Check outer sensor ###########
         outer_voltage = self.outer_laser_sensor.read_voltage()
         if outer_voltage > self.laser_sensor_threshold:
@@ -99,17 +121,21 @@ class Rotatry_Plate():
         else:
             inner_sensor_state = False
 
+        # # Debug print
+        # print(f'inner_sensor_state: {inner_sensor_state}, outer_sensor_state: {outer_sensor_state}')
         ########### ########### ########### ###########
         # Current position state
         if inner_sensor_state == True and outer_sensor_state == True:
             ### Reached 0 positon
             return 0
-        if inner_sensor_state == False and outer_sensor_state == True:
+        elif inner_sensor_state == False and outer_sensor_state == True:
             ### Reached a test tube position
             return 1
-        if inner_sensor_state == False and outer_sensor_state == False:
+        elif inner_sensor_state == False and outer_sensor_state == False:
             ### In the middle of transition
             return -1
+        else:
+            return None
         
     def laser_sensor_threshold_debug_print(self):
         ''' 
@@ -120,6 +146,24 @@ class Rotatry_Plate():
         self.outer_laser_sensor.print_status()
         beep(2)
         time.sleep(2)
+
+    def rotate_untill_next_test_tube(self, auto_engage_disengage=False):
+        '''
+            This function will rotate the plate untill sensor is triggered.
+        '''
+        if auto_engage_disengage:
+            self.engage_motor_AB()
+
+        while(1):
+            position_state = Rotatry_Plate.check_laser_sensing()
+            if position_state == 0 or position_state == 1:
+                beep(1)
+                if auto_engage_disengage:
+                    self.disengage_motor_AB()
+                return 1
+            
+            self.pulse_both_motors(delay_us=40000)
+
 
 
 
@@ -141,6 +185,12 @@ class Receipt_Conveyor():
 
     def laser_sensing(self):
         pass
+
+
+
+
+
+
 
 
 

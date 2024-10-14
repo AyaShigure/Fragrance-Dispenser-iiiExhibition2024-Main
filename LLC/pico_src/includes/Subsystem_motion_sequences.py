@@ -42,9 +42,15 @@ class Pipette_Manipulator_Motion_Sequences:
 class Rotatory_Plate_Motion_Sequences:
     def __init__(self) -> None:
         self.Rotatry_Plate = Rotatry_Plate()
+        self.current_pos = None
     
+    def go_home(self):
+        pass
+
     def demo_move(self):
         self.Rotatry_Plate.pulse_both_motors(True, 1000, 20000)
+
+
 
 
 class Receipt_Conveyor_Motion_Sequences:
