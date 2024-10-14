@@ -37,61 +37,25 @@ system_self_harm_preventer_pin.irq(trigger=Pin.IRQ_FALLING, handler=handle_estop
 
 #############################################
 ##### Stage 2, Control logic ######
-# Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
-# Pipette_Manipulator_Motion_Sequences.go_home()
-# Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
+Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
+Pipette_Manipulator_Motion_Sequences.go_home()
+Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
 
+
+
+
+
+
+# Rotatory plate control sequences test
 # Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
-# Rotatory_Plate_Motion_Sequences.demo_move()
 
-# adc0 = ADCReader(26, name = 'adc0 gpio 26')
-# adc1 = ADCReader(27, name = 'adc1 gpio 27')
-
-# while(1):
-#     adc0.print_status()
-#     # time.sleep(0.5)
-#     adc1.print_status()
-#     # beep(1)
-#     time.sleep(2)
-
-Rotatry_Plate = Rotatry_Plate()
-Rotatry_Plate.plate_motor_A.enable_motor()
-Rotatry_Plate.plate_motor_B.enable_motor()
-Rotatry_Plate.plate_motor_A.set_direction(True)
-Rotatry_Plate.plate_motor_B.set_direction(True)
-
-now = time.time()
-while((time.time() - now )< 600):
-
-    position_state = Rotatry_Plate.check_laser_sensing()
-    # print(f'Laser_sensing state: {position_state}')
-    if position_state == 0: # Reached 0 position
-        beep(4)
-        print('Initial position is reached')
-        time.sleep(4)
-        # Move out of the laser sensor window
-        for _ in range(5):
-            Rotatry_Plate.pulse_both_motors(delay_us=30000)
-            
-    if position_state == 1:
-        beep(2)
-        print('Reached a test tube position')
-        time.sleep(0.5)
-        # Move out of the laser sensor window
-        for _ in range(5):
-            Rotatry_Plate.pulse_both_motors(delay_us=30000)
-
-    # Go how many steps
-    for _ in range(1):
-        Rotatry_Plate.pulse_both_motors(delay_us=40000)
+# Rotatory_Plate_Motion_Sequences.go_home()
+# Rotatory_Plate_Motion_Sequences.go_to_test_tube_NO_n(20)
+# beep(10)
+# Rotatory_Plate_Motion_Sequences.go_home()
 
 
-
-Rotatry_Plate.plate_motor_A.disable_motor()
-Rotatry_Plate.plate_motor_B.disable_motor()
-
-
-# while(1):
+# # while(1):
 #     Rotatry_Plate.laser_sensor_threshold_debug_print()
 
 

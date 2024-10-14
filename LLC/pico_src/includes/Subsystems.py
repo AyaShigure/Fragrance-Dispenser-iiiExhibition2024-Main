@@ -40,7 +40,7 @@ Motor 5:
 
 # motors = [motor1, motor2, motor3, motor4, motor5]
 
-class Rotatry_Plate():
+class Rotatory_Plate():
     def __init__(self) -> None:
         # These 2 motor must be pulsed together
         self.plate_motor_A = tb6600(
@@ -154,14 +154,15 @@ class Rotatry_Plate():
         if auto_engage_disengage:
             self.engage_motor_AB()
 
+        for _ in range(10):
+            self.pulse_both_motors(delay_us=40000)
         while(1):
-            position_state = Rotatry_Plate.check_laser_sensing()
+            position_state = self.check_laser_sensing()
             if position_state == 0 or position_state == 1:
                 beep(1)
                 if auto_engage_disengage:
                     self.disengage_motor_AB()
-                return 1
-            
+                return
             self.pulse_both_motors(delay_us=40000)
 
 
@@ -256,7 +257,7 @@ class Pipette_Manipulator():
         return 1
 
     # direction_str must be 'up' or 'down'
-    def vertical_motor_pluse_steps(self, direction_str, steps, set_delay_us=5000):
+    def vertical_motor_pulse_steps(self, direction_str, steps, set_delay_us=5000):
 
         if direction_str == 'up':
             direction = False
@@ -311,7 +312,7 @@ class Pipette_Manipulator():
         return 1
 
     # direction_str must be 'plate_side' or 'frame_side'
-    def horizontal_motor_pluse_steps(self, direction_str, steps, set_delay_us=6000):
+    def horizontal_motor_pulse_steps(self, direction_str, steps, set_delay_us=6000):
         if direction_str == 'plate_side':
             direction = False
         elif direction_str == 'frame_side':
