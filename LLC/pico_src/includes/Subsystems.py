@@ -58,29 +58,68 @@ class Rotatry_Plate():
 
         ########## ########## ########## 
         # Laser positioning sensors initializations
+        self.outer_laser_sensor = ADCReader(26, name = 'Outer sensor') 
+        self.inner_laser_sensor = ADCReader(27, name = 'Inner sensor') 
+        self.laser_sensor_threshold = 2.3 # On Off threshold
 
+        # self.outer_sensor_state = False
+        # self.inner_sensor_state = False
         ########## ########## ##########
 
-    def pulse_both_motors(self, direction, step, set_delay_time):        
+    def pulse_both_motors(self, delay_us = 10000):        
+        self.plate_motor_A.step.on()
+        self.plate_motor_B.step.on()
+        time.sleep_us(delay_us)
+        self.plate_motor_A.step.off()
+        self.plate_motor_B.step.off()
+        time.sleep_us(delay_us)
+
+    def rotate_both_motors(self, direction, step, set_delay_time):
         self.plate_motor_A.enable_motor()
         self.plate_motor_B.enable_motor()
         self.plate_motor_A.set_direction(direction)
         self.plate_motor_B.set_direction(direction)
-
         for _ in range(step):
-            self.plate_motor_A.step.on()
-            self.plate_motor_B.step.on()
-            time.sleep_us(set_delay_time)
-            self.plate_motor_A.step.off()
-            self.plate_motor_B.step.off()
-            time.sleep_us(set_delay_time)
-
+            self.pulse_both_motors(set_delay_time)
         self.plate_motor_A.disable_motor()
         self.plate_motor_B.disable_motor()
 
-    def laser_sensing(self):
-        pass
+    def check_laser_sensing(self):
+        ########### Check outer sensor ###########
+        outer_voltage = self.outer_laser_sensor.read_voltage()
+        if outer_voltage > self.laser_sensor_threshold:
+            outer_sensor_state = True
+        else:
+            outer_sensor_state = False
 
+        ########### Check inner sensor ###########
+        inner_volatge = self.inner_laser_sensor.read_voltage()
+        if inner_volatge > self.laser_sensor_threshold:
+            inner_sensor_state = True
+        else:
+            inner_sensor_state = False
+
+        ########### ########### ########### ###########
+        # Current position state
+        if inner_sensor_state == True and outer_sensor_state == True:
+            ### Reached 0 positon
+            return 0
+        if inner_sensor_state == False and outer_sensor_state == True:
+            ### Reached a test tube position
+            return 1
+        if inner_sensor_state == False and outer_sensor_state == False:
+            ### In the middle of transition
+            return -1
+        
+    def laser_sensor_threshold_debug_print(self):
+        ''' 
+            Triggering threshold will change depending on the lighting conditions
+            Use this to check if the threshold should be changed.
+        '''
+        self.inner_laser_sensor.print_status()
+        self.outer_laser_sensor.print_status()
+        beep(2)
+        time.sleep(2)
 
 
 
@@ -96,7 +135,8 @@ class Receipt_Conveyor():
 
         ########## ########## ########## 
         # Laser positioning sensors initializations
-
+        self.receipt_sensor = ADCReader(28, name = 'receipt sensor') 
+        self.receipt_sensor_state = False
         ########## ########## ##########
 
     def laser_sensing(self):
