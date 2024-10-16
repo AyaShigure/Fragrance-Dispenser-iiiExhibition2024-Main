@@ -73,7 +73,7 @@ class Pipette_Manipulator_Motion_Sequences:
         self.at_home_question_mark = False
 
         self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=40, set_delay_us=3000)
-        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=600, set_delay_us=5000)
+        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=700, set_delay_us=5000)
 
         self.Pipette_Manipulator.disengage_pusher()
         self.Pipette_Manipulator.disengage_gripper()

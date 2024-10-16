@@ -41,12 +41,14 @@ system_self_harm_preventer_pin.irq(trigger=Pin.IRQ_FALLING, handler=handle_estop
 
 Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
 
-for _ in range(5):
+for _ in range(3):
     Pipette_Manipulator_Motion_Sequences.go_home()
     Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
+    Pipette_Manipulator_Motion_Sequences.drop_a_drop()
     Pipette_Manipulator_Motion_Sequences.put_back_the_pipette()
+
     beep(4)
-    time.sleep(1)
+
 
 
 
