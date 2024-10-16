@@ -83,12 +83,18 @@ class Pipette_Manipulator_Motion_Sequences:
         # time.sleep(0.5)
         beep(1)
 
+        self.Pipette_Manipulator.disengage_servo_motors()
         _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=3000)
         self.go_home()
         self.at_home_question_mark = True
 
     def drop_a_drop(self):
+        '''
+            Move to the top position, then to the frme side, lower the manipulator,
+            drop a drop, then go home.
+        '''
         self.at_home_question_mark = False
+        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
 
         _ = self.Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=3000)
         self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=600, set_delay_us=5000)
@@ -100,6 +106,18 @@ class Pipette_Manipulator_Motion_Sequences:
 
         self.go_home()
         self.at_home_question_mark = True
+
+    def Pipette_manipulator_execute_once(self):
+        '''
+            A full execution cycle start from initial home position, get pipette, drop a drop, put the pipette back, then go home
+        '''
+        self.go_home()
+        self.pick_up_a_pipette()
+        self.drop_a_drop()
+        self.put_back_the_pipette()
+
+
+
 
 ###### ###### ###### ###### Rotatory Plate Motion Sequences
 class Rotatory_Plate_Motion_Sequences:

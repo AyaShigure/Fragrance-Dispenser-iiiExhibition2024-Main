@@ -168,6 +168,17 @@ class Rotatory_Plate():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 class Receipt_Conveyor():
 
     def __init__(self) -> None:
@@ -364,6 +375,10 @@ class Pipette_Manipulator():
     # def deninit_endeffector(self): # This actually will not fork for servos saves 
     #     self.pipette_gripper.deinit()
     #     self.pipette_pusher.deinit()
+
+    def disengage_servo_motors(self):
+        self.disengage_gripper()
+        self.disengage_pusher()
 
     def gripper_demo(self):
         for _ in range(3):

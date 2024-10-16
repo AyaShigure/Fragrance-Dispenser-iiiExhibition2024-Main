@@ -40,21 +40,26 @@ system_self_harm_preventer_pin.irq(trigger=Pin.IRQ_FALLING, handler=handle_estop
 # # Pipette manipulator control sequneces test
 
 Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
+Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
 
-for _ in range(3):
-    Pipette_Manipulator_Motion_Sequences.go_home()
-    Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
-    Pipette_Manipulator_Motion_Sequences.drop_a_drop()
-    Pipette_Manipulator_Motion_Sequences.put_back_the_pipette()
+Rotatory_Plate_Motion_Sequences.go_home()
+Pipette_Manipulator_Motion_Sequences.go_home()
 
-    beep(4)
+for _ in range(10):
+    Pipette_Manipulator_Motion_Sequences.Pipette_manipulator_execute_once()
+    beep(1)
+    Rotatory_Plate_Motion_Sequences.Rotatry_Plate.rotate_untill_next_test_tube(auto_engage_disengage=True)
 
+
+# Pipette_Manipulator_Motion_Sequences.go_home()
+# Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
+# Pipette_Manipulator_Motion_Sequences.drop_a_drop()
+# Pipette_Manipulator_Motion_Sequences.put_back_the_pipette()
+# Pipette_Manipulator_Motion_Sequences.Pipette_manipulator_execute_once()
 
 
 
 # # Rotatory plate control sequences test
-# Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
-# Rotatory_Plate_Motion_Sequences.go_home()
 # Rotatory_Plate_Motion_Sequences.go_to_test_tube_NO_n(20)
 # beep(10)
 # Rotatory_Plate_Motion_Sequences.go_home()
