@@ -361,9 +361,9 @@ class Pipette_Manipulator():
     def disengage_pusher(self):
         self.pipette_pusher.set_angle(self.pipette_pusher_angle_limit[0])
 
-    def deninit_endeffector(self): # This actually will not fork for servos saves 
-        self.pipette_gripper.deinit()
-        self.pipette_pusher.deinit()
+    # def deninit_endeffector(self): # This actually will not fork for servos saves 
+    #     self.pipette_gripper.deinit()
+    #     self.pipette_pusher.deinit()
 
     def gripper_demo(self):
         for _ in range(3):

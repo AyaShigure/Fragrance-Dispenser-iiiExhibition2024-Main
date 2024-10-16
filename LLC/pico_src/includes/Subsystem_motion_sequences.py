@@ -5,10 +5,16 @@ from includes.Subsystems import *
 from machine import Pin, PWM, ADC
 import time
 
+'''
+    Design draft doc based postcard and posters !!!!!!
+'''
+
 ''' 
     This script defines all the motion sequences for all the sub systems.
 '''
-
+def eep():
+    print('who wont go crazy doing multiple brain juice demanding projects, accross multiple engineering ')
+    time.sleep(1)
 
 ###### ###### ###### ###### Pipette Manipulator Motion Sequences
 class Pipette_Manipulator_Motion_Sequences:
@@ -17,26 +23,83 @@ class Pipette_Manipulator_Motion_Sequences:
         self.at_home_question_mark = False
 
     def go_home(self):
-        _ = self.Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=6000)
+        '''
+            The pipette manipulator returns to the up, plate side initial position.
+        '''
         _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
+        _ = self.Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=6000)
         self.at_home_question_mark = True
     
     def pick_up_a_pipette(self):
+        '''
+            The pipette manipulator starts from its initial position,
+            lower the gripper and pick up a pipette.
+        '''
         if self.at_home_question_mark != True:
             self.go_home()
         self.at_home_question_mark = False
 
-        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=80, set_delay_us=3000)
+        self.Pipette_Manipulator.disengage_gripper()
+        self.Pipette_Manipulator.disengage_pusher()
+
+        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=70, set_delay_us=3000)
         _ = self.Pipette_Manipulator.vertical_move_to_bottom(set_delay_us=3000)
         self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='up', steps=20, set_delay_us=5000)
 
         self.Pipette_Manipulator.engage_gripper()
+        beep(1)
+
         self.Pipette_Manipulator.engage_pusher()
+        time.sleep(1)
         self.Pipette_Manipulator.disengage_pusher()
-        time.sleep(0.5)
+        time.sleep(0.1)
+
+        # time.sleep(0.5)
         beep(1)
 
         _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=3000)
+        self.go_home()
+        self.at_home_question_mark = True
+
+    def put_back_the_pipette(self):
+        '''
+            The pipette manipulator starts from its initial position,
+            lower the gripper (but not all the way to the bottom),
+            release the gripper to let the pipette fall back into the test tube while avoiding hard crashing
+
+        ''' 
+        if self.at_home_question_mark != True:
+            self.go_home()
+        self.at_home_question_mark = False
+
+        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=40, set_delay_us=3000)
+        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=600, set_delay_us=5000)
+
+        self.Pipette_Manipulator.disengage_pusher()
+        self.Pipette_Manipulator.disengage_gripper()
+        # time.sleep(0.5)
+        # self.Pipette_Manipulator.engage_gripper()
+        # self.Pipette_Manipulator.engage_pusher()
+        # time.sleep(0.5)
+        beep(1)
+
+        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=3000)
+        self.go_home()
+        self.at_home_question_mark = True
+
+    def drop_a_drop(self):
+        self.at_home_question_mark = False
+
+        _ = self.Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=3000)
+        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=600, set_delay_us=5000)
+        self.Pipette_Manipulator.engage_pusher()
+        beep(1)
+        time.sleep(0.5)
+
+        self.Pipette_Manipulator.disengage_pusher()
+
+        self.go_home()
+        self.at_home_question_mark = True
 
 ###### ###### ###### ###### Rotatory Plate Motion Sequences
 class Rotatory_Plate_Motion_Sequences:

@@ -37,23 +37,25 @@ system_self_harm_preventer_pin.irq(trigger=Pin.IRQ_FALLING, handler=handle_estop
 
 #############################################
 ##### Stage 2, Control logic ######
+# # Pipette manipulator control sequneces test
+
 Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
-Pipette_Manipulator_Motion_Sequences.go_home()
-Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
+
+for _ in range(5):
+    Pipette_Manipulator_Motion_Sequences.go_home()
+    Pipette_Manipulator_Motion_Sequences.pick_up_a_pipette()
+    Pipette_Manipulator_Motion_Sequences.put_back_the_pipette()
+    beep(4)
+    time.sleep(1)
 
 
 
-
-
-
-# Rotatory plate control sequences test
+# # Rotatory plate control sequences test
 # Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
-
 # Rotatory_Plate_Motion_Sequences.go_home()
 # Rotatory_Plate_Motion_Sequences.go_to_test_tube_NO_n(20)
 # beep(10)
 # Rotatory_Plate_Motion_Sequences.go_home()
-
 
 # # while(1):
 #     Rotatry_Plate.laser_sensor_threshold_debug_print()
