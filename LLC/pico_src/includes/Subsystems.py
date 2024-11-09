@@ -110,33 +110,46 @@ class Rotatory_Plate():
         ########### Check outer sensor ###########
         outer_voltage = self.outer_laser_sensor.read_voltage()
         if outer_voltage > self.laser_sensor_threshold:
-            outer_sensor_state = True
+            return 1
         else:
-            outer_sensor_state = False
-
-        ########### Check inner sensor ###########
-        inner_volatge = self.inner_laser_sensor.read_voltage()
-        if inner_volatge > self.laser_sensor_threshold:
-            inner_sensor_state = True
-        else:
-            inner_sensor_state = False
+            return -1
 
         # # Debug print
         # print(f'inner_sensor_state: {inner_sensor_state}, outer_sensor_state: {outer_sensor_state}')
         ########### ########### ########### ###########
         # Current position state
-        if inner_sensor_state == True and outer_sensor_state == True:
-            ### Reached 0 positon
-            return 0
-        elif inner_sensor_state == False and outer_sensor_state == True:
-            ### Reached a test tube position
-            return 1
-        elif inner_sensor_state == False and outer_sensor_state == False:
-            ### In the middle of transition
-            return -1
-        else:
-            return None
+        # if inner_sensor_state == True and outer_sensor_state == True:
+        #     ### Reached 0 positon
+        #     return 0
+
         
+    def rotate_untill_home_reaching_home_pos(self):
+        ########### Check inner sensor ###########
+        inner_volatge = self.inner_laser_sensor.read_voltage()
+        if inner_volatge > self.laser_sensor_threshold:
+            return 0 # Reached home position
+        else:
+            return -1 # In transission 
+
+        # # Debug print
+        # print(f'inner_sensor_state: {inner_sensor_state}, outer_sensor_state: {outer_sensor_state}')
+        ########### ########### ########### ###########
+        # Current position state
+        # if inner_sensor_state == True and outer_sensor_state == True:
+        #     ### Reached 0 positon
+        #     return 0
+        # if inner_sensor_state == False and outer_sensor_state == True:
+        #     ### Reached a test tube position
+        #     return 1
+        # elif inner_sensor_state == False and outer_sensor_state == False:
+        #     ### In the middle of transition
+        #     return -1
+        # else:
+        #     return None
+        
+        
+        
+
     def laser_sensor_threshold_debug_print(self):
         ''' 
             Triggering threshold will change depending on the lighting conditions
@@ -147,34 +160,45 @@ class Rotatory_Plate():
         beep(2)
         time.sleep(2)
 
-    def rotate_untill_next_test_tube(self, auto_engage_disengage=False):
+    def rotate_untill_next_test_tube(self, auto_engage_disengage=False, go_home_mode=False, direction = 0):
         '''
             This function will rotate the plate untill sensor is triggered.
         '''
+        
+        self.set_direction_AB(direction)
         if auto_engage_disengage:
             self.engage_motor_AB()
 
-        for _ in range(10):
+        for _ in range(20):
             self.pulse_both_motors(delay_us=40000)
         while(1):
-            position_state = self.check_laser_sensing()
-            if position_state == 0 or position_state == 1:
-                beep(1)
-                if auto_engage_disengage:
-                    self.disengage_motor_AB()
-                return
-            self.pulse_both_motors(delay_us=40000)
+            '''
+                0: zero-th tube pos
+                1: tube pos
+                -1: in transsition
+            '''
+            if go_home_mode:
+                position_state = self.rotate_untill_home_reaching_home_pos()
+                if position_state == -1: # In transsition      
+                    self.pulse_both_motors(delay_us=40000)
+                    
+                elif position_state == 0:
+                    beep(2)
+                    if auto_engage_disengage:
+                        self.disengage_motor_AB()          
+                    time.sleep(1)
+                    return
 
-
-
-
-
-
-
-
-
-
-
+            else:
+                position_state = self.check_laser_sensing()
+                
+                # if position_state == 0 or position_state == 1:
+                if position_state == -1:
+                    self.pulse_both_motors(delay_us=40000)  
+                elif position_state == 1:
+                    beep(1)
+                    return
+    
 
 
 
@@ -182,12 +206,12 @@ class Rotatory_Plate():
 class Receipt_Conveyor():
 
     def __init__(self) -> None:
-        self.plate_motor_A = tb6600(
+        self.conveyor_motor = tb6600(
                 step_pin=stepper_motors_pins['Motor 4']['step_pin'],
                 direction_pin=stepper_motors_pins['Motor 4']['direction_pin'],
                 enable_pin=stepper_motors_pins['Motor 4']['enable_pin']
             )
-        self.plate_motor_A.disable_motor()
+        self.conveyor_motor.disable_motor()
 
         ########## ########## ########## 
         # Laser positioning sensors initializations
@@ -198,7 +222,15 @@ class Receipt_Conveyor():
     def laser_sensing(self):
         pass
 
+    def engage_conveyor_test(self, delay_us):
+        self.conveyor_motor.enable_motor()
+        self.conveyor_motor.set_direction(True)
 
+
+        for _ in range(2400):
+            self.conveyor_motor.pulse(delay_us=delay_us)
+
+        self.conveyor_motor.disable_motor()
 
 
 
@@ -219,13 +251,13 @@ class Pipette_Manipulator():
     def __init__(self) -> None:
         ############## ############## ############## Endeffector/gripper
         self.pipette_gripper = Servo(25,initial_angel=140) # 140 -> Outer most pos, 140 ->
-        self.pipette_pusher = Servo(18,initial_angel=80) # 80 -> Outer most pos, 80 -> 110
-        self.pipette_gripper_angle_limit = [140, 115] # [Outer most, Inner most]
-        self.pipette_pusher_angle_limit = [90, 100] # [Outer most, Inner most]
+        self.pipette_pusher = Servo(18,initial_angel=90) # 80 -> Outer most pos, 80 -> 110
+        self.pipette_gripper_angle_limit = [150, 115] # [Outer most, Inner most]
+        self.pipette_pusher_angle_limit = [90, 110] # [Outer most, Inner most]
     
         ############## ############## ############## Vertical motor and limit switches
         '''
-            Motor 3 is used as vertical position control.
+            Motor 5 is used as vertical position control.
         '''
         self.vertical_pos_motor = tb6600( 
             step_pin=stepper_motors_pins['Motor 5']['step_pin'],
@@ -237,7 +269,7 @@ class Pipette_Manipulator():
         self.vertical_bottom_limit_switch = Pin(1, Pin.IN, Pin.PULL_UP)
         ############## ############## ############## Horizontal motor and limit switches
         '''
-            Motor 4 is used as horizontal position control.
+            Motor 3 is used as horizontal position control.
         '''
         self.horizontal_pos_motor = tb6600(
             step_pin=stepper_motors_pins['Motor 3']['step_pin'],

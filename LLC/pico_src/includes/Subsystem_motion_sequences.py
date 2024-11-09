@@ -26,8 +26,8 @@ class Pipette_Manipulator_Motion_Sequences:
         '''
             The pipette manipulator returns to the up, plate side initial position.
         '''
-        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
-        _ = self.Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=6000)
+        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=1500)
+        _ = self.Pipette_Manipulator.horizontal_move_to_plate_side(set_delay_us=1500)
         self.at_home_question_mark = True
     
     def pick_up_a_pipette(self):
@@ -42,22 +42,25 @@ class Pipette_Manipulator_Motion_Sequences:
         self.Pipette_Manipulator.disengage_gripper()
         self.Pipette_Manipulator.disengage_pusher()
 
-        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=70, set_delay_us=3000)
+        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=80, set_delay_us=2000)
         _ = self.Pipette_Manipulator.vertical_move_to_bottom(set_delay_us=3000)
-        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='up', steps=20, set_delay_us=5000)
+        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='up', steps=20, set_delay_us=2000)
 
         self.Pipette_Manipulator.engage_gripper()
         beep(1)
-
         self.Pipette_Manipulator.engage_pusher()
         time.sleep(1)
         self.Pipette_Manipulator.disengage_pusher()
         time.sleep(0.1)
+        self.Pipette_Manipulator.engage_pusher()
+        time.sleep(0.3)
+        self.Pipette_Manipulator.disengage_pusher()
+        time.sleep(0.1)
 
         # time.sleep(0.5)
-        beep(1)
+        beep(2)
 
-        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=3000)
+        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=1500)
         self.go_home()
         self.at_home_question_mark = True
 
@@ -72,8 +75,9 @@ class Pipette_Manipulator_Motion_Sequences:
             self.go_home()
         self.at_home_question_mark = False
 
-        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=40, set_delay_us=3000)
-        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=700, set_delay_us=5000)
+        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=47, set_delay_us=2000)
+        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=790, set_delay_us=8000)
+        self.Pipette_Manipulator.horizontal_motor_pulse_steps(direction_str='frame_side', steps=40, set_delay_us=2000)
 
         self.Pipette_Manipulator.disengage_pusher()
         self.Pipette_Manipulator.disengage_gripper()
@@ -94,13 +98,13 @@ class Pipette_Manipulator_Motion_Sequences:
             drop a drop, then go home.
         '''
         self.at_home_question_mark = False
-        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=5000)
+        _ = self.Pipette_Manipulator.vertical_move_to_top(set_delay_us=1500)
 
-        _ = self.Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=3000)
-        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=600, set_delay_us=5000)
+        _ = self.Pipette_Manipulator.horizontal_move_to_frame_side(set_delay_us=1500)
+        self.Pipette_Manipulator.vertical_motor_pulse_steps(direction_str='down', steps=600, set_delay_us=1500)
         self.Pipette_Manipulator.engage_pusher()
         beep(1)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
         self.Pipette_Manipulator.disengage_pusher()
 
@@ -122,27 +126,27 @@ class Pipette_Manipulator_Motion_Sequences:
 ###### ###### ###### ###### Rotatory Plate Motion Sequences
 class Rotatory_Plate_Motion_Sequences:
     def __init__(self) -> None:
-        self.Rotatry_Plate = Rotatory_Plate()
+        self.Rotatry_Plate = Rotatory_Plate() 
         self.current_pos = None
     
-    def go_home(self):
+    def go_home(self,dir=0):
         self.Rotatry_Plate.engage_motor_AB()
         while(1):
-            position_state_ = self.Rotatry_Plate.check_laser_sensing()
+            position_state_ = self.Rotatry_Plate.rotate_untill_home_reaching_home_pos()
             if position_state_ != 0:
-                self.Rotatry_Plate.rotate_untill_next_test_tube()
+                self.Rotatry_Plate.rotate_untill_next_test_tube(auto_engage_disengage=False, go_home_mode=True,direction=dir)
             elif position_state_ == 0:
                 break
             
         self.current_pos = 0
         beep(5)
-        self.Rotatry_Plate.disengage_motor_AB()
+        # self.Rotatry_Plate.disengage_motor_AB()
 
     def go_to_test_tube_NO_n(self, n):
         if self.current_pos == None:
             self.go_home()
         while(self.current_pos != n-1):
-            self.Rotatry_Plate.rotate_untill_next_test_tube(auto_engage_disengage=True)
+            self.Rotatry_Plate.rotate_untill_next_test_tube(auto_engage_disengage=False)
             self.current_pos += 1
         beep(5)
 

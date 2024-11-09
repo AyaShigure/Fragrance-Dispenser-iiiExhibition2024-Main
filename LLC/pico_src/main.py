@@ -2,7 +2,6 @@ from includes.LLC_functions import *
 from includes.Subsystems import *
 from includes.Stepper_pin_def import *
 from includes.Subsystem_motion_sequences import *
-
 from machine import Pin, PWM, ADC
 import time
 '''
@@ -23,32 +22,52 @@ boot() # Initialize all pins to 0, beep for 6 times.
 # led = Pin(25, Pin.OUT)
 
 
-###### Estop configrations ###### Some how the switch is so to extremely sensitive
-estop_pin = 5
-system_self_harm_preventer_pin = Pin(estop_pin, Pin.IN, Pin.PULL_UP) # It prevents self harming behavior
-def handle_estop(self):
-    if system_self_harm_preventer_pin.value() == 1:
-        while(1):
-            beep(2)
-            print('Emergency E-Stopped. Reboot to resolve the issue.')
-            time.sleep(2)
 
-system_self_harm_preventer_pin.irq(trigger=Pin.IRQ_FALLING, handler=handle_estop)
 
-#############################################
-##### Stage 2, Control logic ######
-# # Pipette manipulator control sequneces test
+# Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
+# Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
 
-Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
-Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
+# Rotatory_Plate_Motion_Sequences.go_home()
+# Pipette_Manipulator_Motion_Sequences.go_home()
 
-Rotatory_Plate_Motion_Sequences.go_home()
-Pipette_Manipulator_Motion_Sequences.go_home()
 
-for _ in range(10):
-    Pipette_Manipulator_Motion_Sequences.Pipette_manipulator_execute_once()
-    beep(1)
-    Rotatory_Plate_Motion_Sequences.Rotatry_Plate.rotate_untill_next_test_tube(auto_engage_disengage=True)
+
+# Pipette_Manipulator_Motion_Sequences = Pipette_Manipulator_Motion_Sequences()
+# Rotatory_Plate_Motion_Sequences = Rotatory_Plate_Motion_Sequences()
+
+# Rotatory_Plate_Motion_Sequences.go_home()
+# Pipette_Manipulator_Motion_Sequences.go_home()
+
+
+
+# # for _ in range(2):
+# #     for _ in range(24):
+# #         Pipette_Manipulator_Motion_Sequences.Pipette_manipulator_execute_once()
+# #         beep(1)
+# #         Rotatory_Plate_Motion_Sequences.Rotatry_Plate.rotate_untill_next_test_tube(auto_engage_disengage=False)
+# #     Rotatory_Plate_Motion_Sequences.go_home()
+# #     Pipette_Manipulator_Motion_Sequences.go_home()
+
+
+
+
+# def execute_once(Target_fragrancenumber):
+#     Rotatory_Plate_Motion_Sequences.Rotatry_Plate.engage_motor_AB()
+#     for _ in range(Target_fragrancenumber):
+#         time.sleep(0.5)
+#         beep(1)
+#         Rotatory_Plate_Motion_Sequences.Rotatry_Plate.rotate_untill_next_test_tube(auto_engage_disengage=False)
+
+#     Pipette_Manipulator_Motion_Sequences.Pipette_manipulator_execute_once()
+    
+
+#     Rotatory_Plate_Motion_Sequences.go_home()
+#     Pipette_Manipulator_Motion_Sequences.go_home()
+
+# execute_once(0)
+# execute_once(2)
+# execute_once(4)
+# execute_once(24)
 
 
 # Pipette_Manipulator_Motion_Sequences.go_home()

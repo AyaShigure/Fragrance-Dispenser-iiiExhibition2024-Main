@@ -34,6 +34,8 @@ if __name__ == "__main__":
 
     os.system("clear")
     port = '/dev/ttyACM0'
+    # port = '/dev/ttyACM1'
+
     RPi4BHeaderString = PrintRPi4BHeader()
 
 
