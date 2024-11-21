@@ -252,7 +252,7 @@ class Pipette_Manipulator():
         ############## ############## ############## Endeffector/gripper
         self.pipette_gripper = Servo(25,initial_angel=140) # 140 -> Outer most pos, 140 ->
         self.pipette_pusher = Servo(18,initial_angel=90) # 80 -> Outer most pos, 80 -> 110
-        self.pipette_gripper_angle_limit = [150, 115] # [Outer most, Inner most]
+        self.pipette_gripper_angle_limit = [150, 105] # [Outer most, Inner most]
         self.pipette_pusher_angle_limit = [90, 110] # [Outer most, Inner most]
     
         ############## ############## ############## Vertical motor and limit switches
